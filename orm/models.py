@@ -7,31 +7,27 @@ Base = declarative_base()
 
 
 class User(Base):
-    __tablename__ = 'example_user'  # user clashes with psql user
+    __tablename__ = "example_user"  # user clashes with psql user
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String())
     full_name = Column(String())
 
     def __repr__(self):
-        return "<User({}, {}, {})>".format(
-            self. id,
-            self.name,
-            self.full_name
-        )
+        return "<User({}, {}, {})>".format(self.id, self.name, self.full_name)
 
 
 class Address(Base):
-    __tablename__ = 'address'
+    __tablename__ = "address"
 
     id = Column(Integer(), primary_key=True, autoincrement=True)
     email_address = Column(String, nullable=False)
-    user_id = Column(Integer(), ForeignKey('example_user.id'))
+    user_id = Column(Integer(), ForeignKey("example_user.id"))
 
-    user = relationship("User", backref='addresses')
+    user = relationship("User", backref="addresses")
 
     def __repr__(self):
-        return '<Address({})'.format(self.email_address)
+        return "<Address({})".format(self.email_address)
 
 
 class Ingredient(Base):
@@ -45,7 +41,8 @@ class Ingredient(Base):
     │  4 │ milk            │
     └────┴─────────────────┘
     """
-    __tablename__ = 'ingredient'
+
+    __tablename__ = "ingredient"
 
     id = Column(Integer(), primary_key=True, autoincrement=True)
     ingredient_name = Column(String, nullable=False)
@@ -59,7 +56,8 @@ class Recipe(Base):
     │  1 │ cake        │
     └────┴─────────────┘
     """
-    __tablename__ = 'recipe'
+
+    __tablename__ = "recipe"
 
     id = Column(Integer(), primary_key=True, autoincrement=True)
     recipe_name = Column(String, nullable=False)
@@ -76,15 +74,16 @@ class ExecutedRecipe(Base):
     │  4 │ cake        │ flour           │ 1/1  │      500 │
     └────┴─────────────┴─────────────────┴──────┴──────────┘
     """
+
     __tablename__ = "executedrecipe"
 
     id = Column(Integer(), primary_key=True, autoincrement=True)
-    recipe_id = Column(Integer(), ForeignKey('recipe.id', ondelete='cascade'))
-    ingredient_id = Column(Integer(), ForeignKey('ingredient.id', ondelete='cascade'))
+    recipe_id = Column(Integer(), ForeignKey("recipe.id", ondelete="cascade"))
+    ingredient_id = Column(Integer(), ForeignKey("ingredient.id", ondelete="cascade"))
     date = Column(Date(), nullable=False)
     quantity = Column(Float(), nullable=False)
 
-    UniqueConstraint('recipe_id', 'ingredient_id', 'date')
+    UniqueConstraint("recipe_id", "ingredient_id", "date")
 
     recipe = relationship("Recipe")
     ingredient = relationship("Ingredient")

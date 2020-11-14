@@ -31,28 +31,34 @@ def run_example():
     # create a table which you can use to generate SQL
     # it is not bound to engine or anything
     metadata = MetaData()
-    user_table = Table('example_user', metadata,
-                       Column('id', Integer, primary_key=True),
-                       Column('name', String),
-                       Column('fullname', String)
-                       )
+    user_table = Table(
+        "example_user",
+        metadata,
+        Column("id", Integer, primary_key=True),
+        Column("name", String),
+        Column("fullname", String),
+    )
 
     # create a specific table
-    address_table = Table('address', metadata,
-                          Column('id', Integer, primary_key=True),
-                          Column('email_address', String(100), nullable=False),
-                          Column('user_id', Integer, ForeignKey('example_user.id'))
-                          )
+    address_table = Table(
+        "address",
+        metadata,
+        Column("id", Integer, primary_key=True),
+        Column("email_address", String(100), nullable=False),
+        Column("user_id", Integer, ForeignKey("example_user.id")),
+    )
 
     # it will skip tables which already exist
     metadata.create_all(engine)
 
-    network_table = Table('network', metadata,
-                          Column('network_id', Integer, primary_key=True),
-                          Column('name', String(100), nullable=False),
-                          Column('created_at', DateTime, nullable=False),
-                          Column('owner_id', Integer, ForeignKey('example_user.id'))
-                          )
+    network_table = Table(
+        "network",
+        metadata,
+        Column("network_id", Integer, primary_key=True),
+        Column("name", String(100), nullable=False),
+        Column("created_at", DateTime, nullable=False),
+        Column("owner_id", Integer, ForeignKey("example_user.id")),
+    )
     # create a single table
     try:
         network_table.create(engine)
@@ -65,7 +71,9 @@ def run_example():
     +-------------------------------------------------------------------------+
     """
     metadata_reflected = MetaData()
-    user_reflected = Table('example_user', metadata, autoload=True, autoload_with=engine)
+    user_reflected = Table(
+        "example_user", metadata, autoload=True, autoload_with=engine
+    )
 
     """
     +-------------------------------------------------------------------------+
@@ -74,8 +82,8 @@ def run_example():
     """
     inspector = inspect(engine)
     print(inspector.get_table_names())
-    print(inspector.get_columns('example_user'))
+    print(inspector.get_columns("example_user"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_example()

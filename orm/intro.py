@@ -17,13 +17,14 @@ from engine import engine
 +-------------------------------------------------------------------------+
 """
 
-ed_user = User(name='ed', full_name='ed jones')
+ed_user = User(name="ed", full_name="ed jones")
 print(ed_user)
 
 # create all tables which subclass Base
 Base.metadata.create_all(engine)
 
 from sqlalchemy.orm import Session
+
 session = Session(bind=engine)
 session.add(ed_user)
 print(session.new)
@@ -33,7 +34,7 @@ print(session.new)
 | 3. Session will *flush* *pending* objects to the db before each query.
 +-------------------------------------------------------------------------+
 """
-our_user = session.query(User).filter_by(name='ed').first()
+our_user = session.query(User).filter_by(name="ed").first()
 print(our_user)
 print(session.new)
 
@@ -52,7 +53,7 @@ print(session.new)
 """
 
 print(ed_user is our_user)
-ed_user.haha = 'asdf'
+ed_user.haha = "asdf"
 
 
 """
@@ -60,11 +61,13 @@ ed_user.haha = 'asdf'
 | 6. Add multiple objects, they'll appear in session.new
 +-------------------------------------------------------------------------+
 """
-session.add_all([
-    User(name='wendey', full_name='wendy weathersmith'),
-    User(name='mary', full_name='Mary Contrary'),
-    User(name='fred', full_name='Fred Flintstone')
-])
+session.add_all(
+    [
+        User(name="wendey", full_name="wendy weathersmith"),
+        User(name="mary", full_name="Mary Contrary"),
+        User(name="fred", full_name="Fred Flintstone"),
+    ]
+)
 
 print(session.new)
 
@@ -73,7 +76,7 @@ print(session.new)
 | 7. Modifying objects that are flushed appear in session.dirty
 +-------------------------------------------------------------------------+
 """
-ed_user.full_name = 'Ed Jones'
+ed_user.full_name = "Ed Jones"
 print(session.dirty)
 
 """
@@ -101,11 +104,11 @@ print(ed_user.full_name)  # re accessing ed triggers the transaction
 +-------------------------------------------------------------------------+
 """
 
-ed_user.name = 'Eduardo'
-fake_user = User(name='fake', full_name='Fake Guy')
+ed_user.name = "Eduardo"
+fake_user = User(name="fake", full_name="Fake Guy")
 session.add(fake_user)
 session.flush()
-print(session.query(User).filter(User.name.in_(['Eduardo', 'fake'])).all())
+print(session.query(User).filter(User.name.in_(["Eduardo", "fake"])).all())
 session.rollback()
 print(fake_user in session)
 print(ed_user.name)

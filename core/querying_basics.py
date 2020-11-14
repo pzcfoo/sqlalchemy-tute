@@ -8,24 +8,30 @@ from sqlalchemy import select, join
 
 def run_example():
     metadata = MetaData()
-    user_table = Table('example_user', metadata,
-                       Column('id', Integer, primary_key=True),
-                       Column('name', String),
-                       Column('fullname', String)
-                       )
+    user_table = Table(
+        "example_user",
+        metadata,
+        Column("id", Integer, primary_key=True),
+        Column("name", String),
+        Column("fullname", String),
+    )
 
-    address_table = Table('address', metadata,
-                          Column('id', Integer, primary_key=True),
-                          Column('email_address', String(100), nullable=False),
-                          Column('user_id', Integer, ForeignKey('example_user.id'))
-                          )
+    address_table = Table(
+        "address",
+        metadata,
+        Column("id", Integer, primary_key=True),
+        Column("email_address", String(100), nullable=False),
+        Column("user_id", Integer, ForeignKey("example_user.id")),
+    )
 
-    network_table = Table('network', metadata,
-                          Column('network_id', Integer, primary_key=True),
-                          Column('name', String(100), nullable=False),
-                          Column('created_at', DateTime, nullable=False),
-                          Column('owner_id', Integer, ForeignKey('example_user.id'))
-                          )
+    network_table = Table(
+        "network",
+        metadata,
+        Column("network_id", Integer, primary_key=True),
+        Column("name", String(100), nullable=False),
+        Column("created_at", DateTime, nullable=False),
+        Column("owner_id", Integer, ForeignKey("example_user.id")),
+    )
     metadata.create_all(engine)
 
     """
@@ -34,16 +40,15 @@ def run_example():
     +-------------------------------------------------------------------------+
     """
     user_data = [
-        {'id': 1, 'name': 'swag', 'fullname': 'swag king'},
-        {'id': 2, 'name': 'yolo', 'fullname': 'yolo swag'},
+        {"id": 1, "name": "swag", "fullname": "swag king"},
+        {"id": 2, "name": "yolo", "fullname": "yolo swag"},
     ]
     stmt_ins_user = user_table.insert().values(user_data)
     engine.execute(stmt_ins_user)
 
     address_data = [
-        {'id': 1, 'email_address': 'swag.king@gmail.com', 'user_id': 1},
-        {'id': 2, 'email_address': 'yolo.swag@gmail.com', 'user_id': 2}
-
+        {"id": 1, "email_address": "swag.king@gmail.com", "user_id": 1},
+        {"id": 2, "email_address": "yolo.swag@gmail.com", "user_id": 2},
     ]
     stmt_ins_address = address_table.insert().values(address_data)
     engine.execute(stmt_ins_address)
@@ -100,5 +105,5 @@ def run_example():
     metadata.drop_all(engine)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_example()
