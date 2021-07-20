@@ -98,8 +98,8 @@ def a_cross_join_query():
             Recipe.recipe_name,
             Ingredient.ingredient_name.label("ingredient_used"),
         )
-        .join(Recipe, ExecutedRecipe.recipe)
-        .join(Ingredient, ExecutedRecipe.ingredient)
+            .join(Recipe, ExecutedRecipe.recipe)
+            .join(Ingredient, ExecutedRecipe.ingredient)
     ).subquery()
 
     used_ingredients_cross_q = session.query(
@@ -149,7 +149,7 @@ def b_cross_join_case_query():
     """
     cross_join_sq = a_cross_join_query().subquery()
     ingredients_match = (
-        cross_join_sq.c.ingredient_used == cross_join_sq.c.ingredient_name
+            cross_join_sq.c.ingredient_used == cross_join_sq.c.ingredient_name
     )
     q = session.query(
         cross_join_sq.c.recipe_name,
@@ -233,9 +233,9 @@ def full_cross_join_query():
             Ingredient.ingredient_name.label("ingredient_used"),
             ExecutedRecipe.quantity,
         )
-        .select_from(ExecutedRecipe)
-        .join(Ingredient, ExecutedRecipe.ingredient)
-        .join(Recipe, ExecutedRecipe.recipe)
+            .select_from(ExecutedRecipe)
+            .join(Ingredient, ExecutedRecipe.ingredient)
+            .join(Recipe, ExecutedRecipe.recipe)
     ).subquery()
 
     has_ingredient_used = sq.c.ingredient_used == Ingredient.ingredient_name
@@ -249,8 +249,8 @@ def full_cross_join_query():
                 "quantity"
             ),
         )
-        .join(Ingredient, literal(True))
-        .group_by(sq.c.recipe_name, sq.c.date, Ingredient.ingredient_name,)
+            .join(Ingredient, literal(True))
+            .group_by(sq.c.recipe_name, sq.c.date, Ingredient.ingredient_name,)
     )
     df = pd.DataFrame(q)  # debug
     return q
@@ -361,8 +361,8 @@ def c_cross_join_group_by_on_second_var():
             sq.c.date,
             func.sum(sq.c.quantity).label("quantity"),
         )
-        .group_by(sq.c.recipe_name, sq.c.ingredient_name, sq.c.date)
-        .order_by(sq.c.recipe_name, sq.c.date, sq.c.ingredient_name)
+            .group_by(sq.c.recipe_name, sq.c.ingredient_name, sq.c.date)
+            .order_by(sq.c.recipe_name, sq.c.date, sq.c.ingredient_name)
     )
     df = pd.DataFrame(q)  # debug
     return q
@@ -381,9 +381,9 @@ def full_cross_join_on_two_variables_query():
             Ingredient.ingredient_name.label("ingredient_used"),
             ExecutedRecipe.quantity,
         )
-        .select_from(ExecutedRecipe)
-        .join(Ingredient, ExecutedRecipe.ingredient)
-        .join(Recipe, ExecutedRecipe.recipe)
+            .select_from(ExecutedRecipe)
+            .join(Ingredient, ExecutedRecipe.ingredient)
+            .join(Recipe, ExecutedRecipe.recipe)
     ).subquery()
 
     has_ingredient_and_date = and_(
@@ -399,11 +399,11 @@ def full_cross_join_on_two_variables_query():
                 "quantity"
             ),
         )
-        .select_from(sq)
-        .join(date_sq, literal(True))
-        .join(Ingredient, literal(True))
-        .group_by(sq.c.recipe_name, Ingredient.ingredient_name, date_sq.c.date,)
-        .order_by(sq.c.recipe_name, date_sq.c.date, Ingredient.ingredient_name)
+            .select_from(sq)
+            .join(date_sq, literal(True))
+            .join(Ingredient, literal(True))
+            .group_by(sq.c.recipe_name, Ingredient.ingredient_name, date_sq.c.date,)
+            .order_by(sq.c.recipe_name, date_sq.c.date, Ingredient.ingredient_name)
     )
     df = pd.DataFrame(q)
     return q
